@@ -43,4 +43,29 @@ public class FileService implements FileServiceInterface {
 		return folderSize;
 	}
 
+	@Override
+	public ArrayList<ModelFile> sortFilesCreateDate(ArrayList<ModelFile> filesList) {
+		for(int i=0;i<filesList.size()-1;i++){
+			for(int j=0;j<filesList.size()-2;j++){
+				if(filesList.get(j).getFileCreated() > filesList.get(j+1).getFileCreated()){
+					filesList= swapOrders(filesList,j,j+1);
+				}
+			}
+		}return filesList;
+		
+	}
+
+	@Override
+	public ArrayList<ModelFile> swapOrders(ArrayList<ModelFile> filesList, int fileIndexI, int fileIndexJ) {
+		ModelFile temp1=null;
+		ModelFile temp2=null;
+		temp1=filesList.get(fileIndexI);
+		temp2=filesList.get(fileIndexJ);
+		filesList.set(fileIndexI, temp2);
+		filesList.set(fileIndexJ, temp1);
+		return filesList;
+	}
+
+
+
 }
