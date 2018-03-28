@@ -66,6 +66,12 @@ public class FileService implements FileServiceInterface {
 		return filesList;
 	}
 
+	@Override
+	public ArrayList<ModelFile> deleteBatchFiles(ArrayList<ModelFile> filesList, String[] batchFiles) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 
 }
