@@ -21,7 +21,7 @@ public class FileService implements FileServiceInterface {
 					String fileName = listOfFiles[i].getName();
 					String[] nameSplit = fileName.split("\\.");
 					tempFile.setFileName(listOfFiles[i].getName());
-					tempFile.setFileSize(listOfFiles[i].length());
+					tempFile.setFileSize(listOfFiles[i].length()/1000);
 					tempFile.setFileCreated(listOfFiles[i].lastModified());
 					tempFile.setFileType(nameSplit[1]);
 					tempFiles.add(tempFile);
@@ -49,7 +49,7 @@ public class FileService implements FileServiceInterface {
 		for(int i=0;i<filesList.size()-1;i++){
 			for(int j=0;j<filesList.size()-2;j++){
 				if(filesList.get(j).getFileCreated() > filesList.get(j+1).getFileCreated()){
-					filesList= swapOrders(filesList,j,j+1);
+					filesList= swapFiles(filesList,j,j+1);
 				}
 			}
 		}return filesList;
@@ -57,7 +57,7 @@ public class FileService implements FileServiceInterface {
 	}
 
 	@Override
-	public ArrayList<ModelFile> swapOrders(ArrayList<ModelFile> filesList, int fileIndexI, int fileIndexJ) {
+	public ArrayList<ModelFile> swapFiles(ArrayList<ModelFile> filesList, int fileIndexI, int fileIndexJ) {
 		ModelFile temp1=null;
 		ModelFile temp2=null;
 		temp1=filesList.get(fileIndexI);
@@ -109,11 +109,9 @@ public class FileService implements FileServiceInterface {
 	public ArrayList<ModelFile> moveFiles(ArrayList<ModelFile> filesList, String sourcePath, String destinationPath) {
 		try{
 		    File destinationFolder = new File(destinationPath);
-		    if (!destinationFolder.exists())
-		    {
+		    if (!destinationFolder.exists()){
 		        destinationFolder.mkdirs();
 		    }
-
 		    for(int i=0;i<filesList.size();i++){
 		    	  File tempFile = new File(sourcePath+filesList.get(i).getFileName());
 		    	  tempFile.renameTo(new File(destinationFolder+"/"+filesList.get(i).getFileName()));

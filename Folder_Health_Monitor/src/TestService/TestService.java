@@ -1,42 +1,27 @@
 package TestService;
 
-import java.io.File;
-import java.util.ArrayList;
 
-import Services.FileService;
-import Model.ModelFile;
+import Services.ExecutionService;
+
 
 public class TestService {
 
 	public static void main(String[] args) {
-		FileService fs = new FileService(); 
+		ExecutionService es = new ExecutionService(); 
 		String sourceFolder = "/home/om/test_input/";
 		String destinationFolder = "/home/om/test_output/"; 
-		ArrayList<ModelFile> mf = new ArrayList<ModelFile>();
-		ArrayList<ModelFile> batchFile = new ArrayList<ModelFile>();
-		String[] batchExtenction ={"sh","bat","odt"};
-		double folderSize =0;
-		mf =fs.readFiles(sourceFolder);
-		folderSize=fs.getFolderSize(mf);
-		System.out.println(folderSize);
+		String[] batchExtenction ={"sh","bat","odt"}; // File Extensions that are not allowed
+		double MAXSIZE = 100000; // Max size of Secured Folder 100mb (100000kb)
+		int TIMEDELAY = 300000; // 5 Mins in ms
 		
-//		for (ModelFile modelFile : mf) {
-//			System.out.println(modelFile.getFileName());
-//			System.out.println(modelFile.getFileSize());
-//			System.out.println(modelFile.getFileType());
-//			System.out.println(modelFile.getFileCreated());
-//		}
-		batchFile = fs.getBatchFiles(mf,batchExtenction);
-//		fs.deleteBatchFiles(batchFile,folderPath);
-//		for (ModelFile modelFile : batchFile) {
-//			System.out.println(modelFile.getFileName());
-//			System.out.println(modelFile.getFileSize());
-//			System.out.println(modelFile.getFileType());
-//			System.out.println(modelFile.getFileCreated());
-//		}
-
-	    fs.moveFiles(batchFile,sourceFolder,destinationFolder);
-	    
-        
+		for(;;){
+			es.fileHealthMonitor(batchExtenction, sourceFolder, destinationFolder,MAXSIZE);
+//			System.out.println("s");
+			try {
+				Thread.sleep(TIMEDELAY);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
