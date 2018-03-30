@@ -10,7 +10,7 @@ public class TestService {
 		ExecutionService es = new ExecutionService(); 
 		String sourceFolder = "/home/om/test_input/";
 		String destinationFolder = "/home/om/test_output/"; 
-		String reportFilePath = "/home/om/report/";
+		String reportFilePath = "/home/om/report.txt";
 		String[] batchExtenction ={"sh","bat","odt"}; // File Extensions that are not allowed
 		double MAXSIZE = 100000; // Max size of Secured Folder 100mb (100000kb)
 		int TIMEDELAY = 300000; // 5 Mins in ms
