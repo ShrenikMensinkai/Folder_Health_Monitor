@@ -4,16 +4,16 @@ import java.text.SimpleDateFormat;
 
 
 public class ModelReport {
-	protected SimpleDateFormat dateTime;
+	protected String dateTime;
 	protected double folderSizeBefore;
 	protected double folderSizeAfter;;
 	protected long archivedFileCount ;
 	protected String deletedFileName;
 	
-	public SimpleDateFormat getDateTime() {
+	public String getDateTime() {
 		return dateTime;
 	}
-	public void setDateTime(SimpleDateFormat dateTime) {
+	public void setDateTime(String dateTime) {
 		this.dateTime = dateTime;
 	}
 	public double getFolderSizeBefore() {
