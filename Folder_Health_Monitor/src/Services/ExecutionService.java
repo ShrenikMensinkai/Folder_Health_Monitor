@@ -1,44 +1,67 @@
 package Services;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import Model.ModelFile;
+import Model.ModelReport;
 import Services.FileService;
 import ServicesInterface.ExecutionServiceInterface;
 
 public class ExecutionService implements ExecutionServiceInterface  {
 	FileService fs = new FileService();
-	ArrayList<ModelFile> tempFiles = new ArrayList<ModelFile>();
-	ArrayList<ModelFile> filesToDelete = new ArrayList<ModelFile>();
-	ArrayList<ModelFile> filesToMove = new ArrayList<ModelFile>();
+	ArrayList<ModelFile> tempFiles;
+	ArrayList<ModelFile> filesToDelete;
+	ArrayList<ModelFile> filesToMove;
+	FileWriter fileWriter=null;
+	BufferedWriter bufferedWriter=null;
+	ModelReport tempReport;
 	double tempSize;
+	SimpleDateFormat time;
 	@Override
-	public boolean fileHealthMonitor(String[] batchFiles, String src, String dest,double MAXSIZE) {
+	public boolean fileHealthMonitor(String[] batchFiles, String src, String dest,double MAXSIZE ,String reportPath) {
 		try{
+			filesToMove = new ArrayList<ModelFile>();
+			filesToDelete = new ArrayList<ModelFile>();
+			tempFiles = new ArrayList<ModelFile>();
+			fileWriter = new FileWriter(reportPath,true);
+			bufferedWriter = new BufferedWriter(fileWriter);
+			tempReport = new ModelReport();
+			time = new SimpleDateFormat("yyyy/MM/dd HH:mm"); 
+			tempReport.setDateTime(time);
+			
 			if(src==null || dest==null){
 				System.out.println("FileSource or FileDestination cannot be null");
 				return false;
 			}
 			System.out.println(src);
 			tempFiles=fs.readFiles(src); //Read Files from Secured folder
-			
+			tempReport.setFolderSizeBefore(fs.getFolderSize(tempFiles));
 			filesToDelete =fs.getBatchFiles(tempFiles,batchFiles); //Check for batchfile exist in Secured folder
+			
 			if(!filesToDelete.isEmpty()){
 				fs.deleteBatchFiles(filesToDelete,src);// Delete batch files from Secured folder
-				tempFiles=fs.readFiles(src); 
-			}
+				tempReport.setDeletedFileName(fs.createDeleteFileString(filesToDelete)); 
+				tempFiles=fs.readFiles(src); 				
+			}			
 			tempSize=fs.getFolderSize(tempFiles); // Get Secured folder size
+			
 			if(tempSize>MAXSIZE){ // Check Secured folder size exceeding Maxsize
 				tempFiles=fs.sortFilesCreateDate(tempFiles); //Sort Secured folder files on its creation date 
 				filesToMove = fs.fileToMove(tempFiles,tempSize-MAXSIZE); //Get Files to move to Archive folder
 				fs.moveFiles(filesToMove, src, dest); // Move to Archive folder
+				tempReport.setArchivedFileCount(filesToMove.size());
 			} 
+			
+			tempReport.setFolderSizeAfter(fs.getFolderSize(fs.readFiles(src)));
+			fs.writeReportToTextfile(tempReport,bufferedWriter); // Generate Report
+			
 		}catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
-		
-		
-		return false;
+		return true;
 	}
 	
 	

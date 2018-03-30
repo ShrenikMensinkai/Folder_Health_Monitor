@@ -2,12 +2,16 @@ package Services;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
+
 import Model.ModelFile;
+import Model.ModelReport;
 import ServicesInterface.FileServiceInterface;
 
 public class FileService implements FileServiceInterface {
-
+	boolean createReport = true;
 	@Override
 	public ArrayList<ModelFile> readFiles(String path) {
 		ArrayList<ModelFile> tempFiles = new ArrayList<ModelFile>(); 
@@ -31,7 +35,7 @@ public class FileService implements FileServiceInterface {
 			}
 			
 		}catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}return tempFiles;
 	}
 
@@ -76,7 +80,7 @@ public class FileService implements FileServiceInterface {
 				tempFile.delete();
 			}	
 		}catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return true;
 	}
@@ -117,8 +121,41 @@ public class FileService implements FileServiceInterface {
 		    	  tempFile.renameTo(new File(destinationFolder+"/"+filesList.get(i).getFileName()));
 		    }
 		}catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public void writeReportToTextfile(ModelReport reportFile, BufferedWriter bw) {
+		try{
+			if(createReport){
+				bw.write("Time,Secured_Folder_BeforeSize,Secured_Folder_AfterSize,Archived_File_Count,Deleted_File_Name\n");
+				bw.newLine();
+			}
+			createReport = false;
+			bw.write(reportFile.getDateTime()+"\t"+reportFile.getFolderSizeBefore()+"\t"+reportFile.getFolderSizeAfter()+"\t"+reportFile.getArchivedFileCount()+"\t"+reportFile.getDeleatedFileName());
+			bw.newLine();
+			 		
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				bw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public String createDeleteFileString(ArrayList<ModelFile> modelFiles) {
+		String tempDeleteFileString = null;
+		for(ModelFile file:modelFiles){
+			tempDeleteFileString += file.getFileName()+',';
+		}
+		return tempDeleteFileString;
 	}
 }

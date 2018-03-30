@@ -1,7 +1,5 @@
 package Model;
 
-import java.util.Date;
-
 public class ModelFile {
 	protected String fileName;
 	protected double fileSize;

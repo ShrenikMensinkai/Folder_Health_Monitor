@@ -1,8 +1,10 @@
 package ServicesInterface;
 
+import java.io.BufferedWriter;
 import java.util.ArrayList;
 
 import Model.ModelFile;
+import Model.ModelReport;
 
 public interface FileServiceInterface {
 	public ArrayList<ModelFile> readFiles(String path);
@@ -13,4 +15,6 @@ public interface FileServiceInterface {
 	public ArrayList<ModelFile> getBatchFiles(ArrayList<ModelFile> filesList, String[] batchFiles);
 	public ArrayList<ModelFile> fileToMove(ArrayList<ModelFile> filesList, double size);
 	public ArrayList<ModelFile> moveFiles(ArrayList<ModelFile> filesList, String sourcePath,String destinationPath);
+	public void writeReportToTextfile(ModelReport reportFile,BufferedWriter bw);
+	public String createDeleteFileString(ArrayList<ModelFile> modelFiles);
 }

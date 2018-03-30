@@ -8,6 +8,6 @@ package ServicesInterface;
  *
  */
 public interface ExecutionServiceInterface {
-	public boolean fileHealthMonitor(String[] batchFiles,String src,String dest,double MAXSIZE);
+	public boolean fileHealthMonitor(String[] batchFiles,String src,String dest,double MAXSIZE,String reportPath);
 
 }
